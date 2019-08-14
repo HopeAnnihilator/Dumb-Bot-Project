@@ -32,7 +32,6 @@ async def on_message(message):
                     for line in opted_out:
                         if line != str(message.author.id) and line:
                             f.write(line + '\n')
-                            f.close
                 opted_out = open("opted_out.txt").read().splitlines()
                 await message.channel.send(str(message.author) + ' is now opted in')
             else:
