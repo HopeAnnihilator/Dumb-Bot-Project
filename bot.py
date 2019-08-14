@@ -4,7 +4,7 @@ import time
 
 client = commands.Bot(command_prefix = '')
 opted_out = open("opted_out.txt").read().splitlines()
-
+holons = []
 
 @client.event
 async def on_ready():
@@ -14,11 +14,12 @@ async def on_ready():
 @client.event
 async def on_message(message):
     global opted_out
-    if message.content.startswith('Hocus Pocus'):
-        if "opt out" in message.content:
+    global holons
+    if message.content.startswith('Hocus Pocus'): #this is where commands are run to bot by beginning message with 'Hocus Pocus'
+        if "opt out" in message.content: 
             if str(message.author.id) in opted_out:
                 await message.channel.send(str(message.author) + ' is already opted out')
-            else:
+            else: #gotta love this shitshow
                 opted_out = open("opted_out.txt", 'a')
                 opted_out.write(str(message.author.id) + '\n')
                 opted_out.close()
@@ -27,7 +28,7 @@ async def on_message(message):
                 
         elif "opt in" in message.content:
             if str(message.author.id) in opted_out: 
-                with open('opted_out.txt', 'w') as f:
+                with open('opted_out.txt', 'w') as f: #gotta love this shitshow
                     for line in opted_out:
                         if line != str(message.author.id) and line:
                             f.write(line + '\n')
@@ -37,12 +38,20 @@ async def on_message(message):
             else:
                 await message.channel.send(str(message.author) + ' is not opted out')
                 
-        elif "list" in message.content:
-            if str(message.author.id) == user_id and 'opted_out' in message.content and opted_out:
-                await message.channel.send(opted_out)
-            else:
-                await message.channel.send('Either your list is fucked or nobody opted out!')
-            
+        elif "list" in message.content: #this is made so that multiple lists can be output at once
+            if str(message.author.id) == user_id and 'opted_out' in message.content:
+                if opted_out:
+                    await message.channel.send('**opted_out:**')
+                    await message.channel.send(opted_out)
+                else:
+                    await message.channel.send('**Either your list is fucked or nobody opted out!**')
+            if str(message.author.id) == user_id and 'holons' in message.content:
+                if holons:
+                    await message.channel.send('**holons:**')
+                    await message.channel.send(holons)
+                else:
+                    await message.channel.send('***Either your list is fucked or no holons currently exist***')
+                
         
             
     elif str(message.author.id) not in opted_out and str(message.author.id) != bot_id:
