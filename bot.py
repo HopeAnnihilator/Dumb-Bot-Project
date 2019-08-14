@@ -38,26 +38,27 @@ async def on_message(message):
                 await message.channel.send(str(message.author) + ' is not opted out')
                 
         elif "list" in message.content:
-            if str(message.author.id) == '232340330114973698' and 'opted_out' in message.content and opted_out:
+            if str(message.author.id) == user_id and 'opted_out' in message.content and opted_out:
                 await message.channel.send(opted_out)
             else:
                 await message.channel.send('Either your list is fucked or nobody opted out!')
             
         
             
-    elif str(message.author.id) not in opted_out and str(message.author.id) != '610698989641400330':
+    elif str(message.author.id) not in opted_out and str(message.author.id) != bot_id:
         wordlist = open(time.strftime("wordlist-%Y-%m-%d"), "a")
         if message.mentions:
             da_message = (message.content)
             for mention in message.raw_mentions:
-                da_message = da_message.replace(str(mention), '')
-                final_message = da_message.replace('<@>','')
-            wordlist.write(final_message + " ")
-            print(final_message)
+                da_message = da_message.replace(str(mention), '').replace('<@>','')
+            if da_message:
+                wordlist.write(da_message + " ")
+                print(da_message)
         else:
             wordlist.write(message.clean_content + " ")
             print(message.content)  
 
-
+user_id = ''
+bot_id = ''
 token = ''
 client.run(token)
