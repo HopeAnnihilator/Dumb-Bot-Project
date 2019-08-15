@@ -1,0 +1,14 @@
+**Dumb-Bot-Project**
+
+*Commands*
+	opt out:
+		opt out of word tracking
+	opt in:
+		opt into word tracking
+	list:
+		list information from a list dummy
+	
+
+*Lists*
+	opted_out
+	holons
