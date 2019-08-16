@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 import time
 import threading
+import re
 
 global holons
 global opted_out
@@ -9,14 +10,18 @@ global toolong
 global strjoin
 global helpinfo
 global stream
+global customemoji
+global lists
 
 client = commands.Bot(command_prefix = '')
 opted_out = open("opted_out.txt").read().splitlines()
 holons = open('holons.txt').read().splitlines()
 helpinfo = open('help.txt').read().splitlines()
+lists = open('lists.txt').read().splitlines()
 toolong = 1950
 strjoin = '\n'.join
 stream = discord.Streaming(name = "Hocus Pocus...", url = 'https://www.twitch.tv/holonnetwork')
+customemoji  = re.compile("<:.*:\d{18}>")
 
             
 @client.event
@@ -62,27 +67,24 @@ async def on_message(message):
                 await message.channel.send(str(message.author) + ' is not opted out')
                 
         elif "list" in message.content: #this is made so that multiple lists can be output at once
-            if str(message.author.id) == admin_user_id and 'opted_out' in message.content:
-                if opted_out and len(str(opted_out)) < toolong:
-                    await message.channel.send('**opted_out:**')
-                    await message.channel.send(strjoin(opted_out))
-                elif holons and len(str(opted_out)) >= toolong:
-                    await message.channel.send('***Opted_out list too long to post***')
-                else:
-                    await message.channel.send('***Either your list is fucked or nobody opted out!***')
-            if str(message.author.id) == admin_user_id and 'holons' in message.content:
-                if holons and len(str(holons)) < toolong:
-                    await message.channel.send('**holons:**')
-                    await message.channel.send(strjoin(holons))
-                elif holons and len(str(holons)) >= toolong:
-                    await message.channel.send('***Holon list too long to post***')
-                else:
-                    await message.channel.send('***Either your list is fucked or no holons currently exist***')
+            request = 0
+            for item in lists:
+                if item in message.content and item:
+                    await message.channel.send('***' + item + '***')
+                    await message.channel.send(strjoin(eval(item)))
+                    request = request + 1
+                    break
+                elif item in message.content and not item:
+                    await message.channel.send(item + ' is empty')
+                    request = request + 1
+                    break
+            if request == 0:
+                await message.channel.send('Dumb Bot can not find that list')
                 
         
     elif str(message.author.id) not in opted_out and str(message.author.id) != bot_id:
         wordlist = open(time.strftime("wordlist-%Y-%m-%d"), "a")
-        if message.mentions or message.role_mentions or message.channel_mentions or message.mention_everyone:
+        if message.mentions or message.role_mentions or message.channel_mentions or message.mention_everyone or customemoji.search(message.content):
             da_message = (message.content)
             for mention in message.raw_mentions:
                 da_message = da_message.replace(str(mention), '').replace('<@>','')
@@ -92,6 +94,8 @@ async def on_message(message):
                 da_message = da_message.replace(str(mention), '').replace('<@&>','')
             if message.mention_everyone:
                 da_message = da_message.replace(str('@everyone'), '').replace(str('@here'), '')
+            if customemoji.search(message.content):
+                da_message = re.sub(r"<:.*:\d{18}>", '', da_message)
             if da_message:
                 wordlist.write(da_message + " ")
                 print(da_message)
