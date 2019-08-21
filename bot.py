@@ -7,7 +7,6 @@ import threading
 import re
 import json
 import numpy as np
-import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from PIL import Image
 import datetime
