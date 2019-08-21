@@ -107,7 +107,7 @@ async def on_message(message):
             if messageinfo[3] in data['holons']:
                 for role in message.guild.roles:
                     if role.name == messageinfo[3]:
-                        await message.author.add_roles(message.guild, message.author, role.id)
+                        await message.author.add_roles(role)
 
 
     elif str(message.author.id) not in data['opted_out'] and str(message.author.id) != bot_id:
