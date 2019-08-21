@@ -6,6 +6,7 @@ import time
 import threading
 import re
 import json
+import emoji
 
 from discord.utils import get
 
@@ -108,9 +109,12 @@ async def on_message(message):
                 for role in message.guild.roles:
                     if role.name == messageinfo[3]:
                         await message.author.add_roles(role)
-
-
+            else:
+                await message.channel.send('That role can not currently be assigned, try ```Hocus Pocus list holons``` for a list of assignable roles')
     elif str(message.author.id) not in data['opted_out'] and str(message.author.id) != bot_id:
+        if str(message.channel.name) == '🍆':
+                await message.add_reaction('\U0001F346')
+                print('eggplant')
         wordlist = open(time.strftime("messages/%Y-%m-%d"), "a")
         if message.mentions or message.role_mentions or message.channel_mentions or message.mention_everyone or customemoji.search(message.content):
             da_message = (message.content)
