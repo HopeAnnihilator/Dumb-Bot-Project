@@ -39,7 +39,8 @@ stream = discord.Streaming(name = "Hocus Pocus...", url = 'https://www.twitch.tv
 customemoji  = re.compile(r"<:\S*?:\d{18}>")
 command = 'Hocus Pocus'
 date = datetime.today()
-tomorrow = date.replace(day = date.day, hour = 1, minute = 0, second = 0, microsecond = 0) + timedelta(days = 1)
+tomorrow = str(date.replace(day = date.day, hour = 1, minute = 0, second = 0, microsecond = 0) + timedelta(days = 1))
+tomorrow = tomorrow[0:10]
 today_cloud = time.strftime("messages/%Y-%m-%d")
 cloud_file = time.strftime("wordclouds/%Y-%m-%d.png")
 
@@ -70,7 +71,8 @@ async def share_cloud(cloud_file):
     channel = client.get_channel(wordcloud_channel_id)
     await channel.send(file = discord.File(cloud_file))
     global tomorrow, today_cloud
-    tomorrow = date.replace(day = date.day, hour = 1, minute = 0, second = 0, microsecond = 0) + timedelta(days = 1)
+    tomorrow = str(date.replace(day = date.day, hour = 1, minute = 0, second = 0, microsecond = 0) + timedelta(days = 1))
+    tomorrow = tomorrow[0:10]
     today_cloud = time.strftime("messages/%Y-%m-%d")
     cloud_file = time.strftime("wordclouds/%Y-%m-%d.png")
 
@@ -97,7 +99,8 @@ def save():
 
 @client.event
 async def on_message(message):
-    date = datetime.today()
+    date = str(datetime.today())
+    date = date[0:10]
     if tomorrow == date:
         await generate_wordcloud()
 
@@ -146,7 +149,8 @@ async def on_message(message):
         elif "wordcloud" in message.content and message.author.id == admin_user_id:
             await generate_wordcloud()
         elif "datetime" in message.content and message.author.id == admin_user_id:
-            await message.channel.send(datetime.datetime.now())
+            await message.channel.send(date)
+            await message.channel.send(tomorrow)
 
 
     elif str(message.author.id) not in data['opted_out'] and message.author.id != bot_id:
