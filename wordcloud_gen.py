@@ -29,7 +29,7 @@ async def generate_wordcloud():
 async def share_cloud(cloud_file):
     channel = client.get_channel(wordcloud_channel_id)
     await channel.send(file = discord.File(cloud_file))
-
+    exit()
 
 
 token = 'NjEwNjk4OTg5NjQxNDAwMzMw.XVNMaw.gjCNUJhN9ZAaEnxJQGcCRfsyla4'
