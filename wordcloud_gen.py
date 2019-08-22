@@ -32,5 +32,5 @@ async def share_cloud(cloud_file):
     exit()
 
 
-token = 'NjEwNjk4OTg5NjQxNDAwMzMw.XVNMaw.gjCNUJhN9ZAaEnxJQGcCRfsyla4'
+token = ''
 client.run(token)
