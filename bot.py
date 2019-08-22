@@ -6,30 +6,16 @@ import time
 import threading
 import re
 import json
-import numpy as np
-from wordcloud import WordCloud
-from PIL import Image
-import datetime
-from datetime import datetime as dt
-from datetime import timedelta
 from threading import Timer
 
-global toolong
 global strjoin
 global helpinfo
-global stream
-global stream_up
 global customemoji
-global change
-global roles
-global words
 
 client = commands.Bot(command_prefix = '')
 helpinfo = open('help.txt').read().splitlines()
 
-toolong = 1950
 needsupdate = 0
-roles = {}
 
 strjoin = '\n'.join
 stream = discord.Streaming(name = "Hocus Pocus...", url = 'https://www.twitch.tv/holonnetwork')
@@ -49,20 +35,6 @@ async def on_ready():
     await role_check()
     await client.change_presence(status = discord.Status.online, activity = stream)
 
-
-async def generate_wordcloud():
-    words = open(time.strftime("messages/%Y-%m-%d")).read().splitlines()
-    with Image.open ('dcdarknet.png') as dcdn:
-        mask = np.array(dcdn)
-    word_cloud = WordCloud(width = 750, height = 769, background_color = 'black', mask = mask)
-    word_cloud.generate(str(words))
-    cloud_file = time.strftime("wordclouds/%Y-%m-%d.png")
-    word_cloud.to_file(cloud_file)
-    await share_cloud(cloud_file)
-
-async def share_cloud(cloud_file):
-    channel = client.get_channel(wordcloud_channel_id)
-    await channel.send(file = discord.File(cloud_file))
 
 async def role_check():
     guild = client.get_guild(target_server_id)
@@ -129,8 +101,7 @@ async def on_message(message):
                         await message.author.add_roles(role)
             else:
                 await message.channel.send('That role can not currently be assigned, try ```Hocus Pocus list holons``` for a list of assignable roles')
-        elif "wordcloud" in message.content and message.author.id == admin_user_id:
-            await generate_wordcloud()
+
     elif str(message.author.id) not in data['opted_out'] and message.author.id != bot_id:
         if str(message.channel.name) == '🍆':
                 await message.add_reaction('\U0001F346')
@@ -154,9 +125,8 @@ async def on_message(message):
             wordlist.write(message.content + " ") 
 
 
-wordcloud_channel_id = 
 target_server_id = 
 admin_user_id = 
 bot_id = 
-token = 
+token = ''
 client.run(token)
